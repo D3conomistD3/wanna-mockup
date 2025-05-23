@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Search, MoreVertical, User } from "lucide-react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,9 +31,12 @@ const Navbar = () => {
           </div>
 
           {/* Following Button */}
-          <button className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink">
+          <Link
+            href="/following"
+            className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink"
+          >
             Following
-          </button>
+          </Link>
 
           {/* Three Dots Menu - Vertical with Dropdown */}
           <DropdownMenu>
