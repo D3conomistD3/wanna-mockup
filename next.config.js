@@ -3,7 +3,7 @@ const path = require("path");
 
 const nextConfig = {
   images: {
-    domains: ["images.unsplash.com"],
+    domains: ["images.unsplash.com", "api.dicebear.com"],
   },
   // Exclude tempobook directories from the build
   experimental: {

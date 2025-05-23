@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, MoreVertical, User, X, Users } from "lucide-react";
+import { Search, MoreVertical, User, X, Users, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Toggle } from "@/components/ui/toggle";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
@@ -38,11 +37,12 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Following Button - Active state */}
-          <Link href="/following">
-            <button className="px-3 py-2 rounded bg-gray-800 text-wanna-pink">
-              Following
-            </button>
+          {/* Following Button */}
+          <Link
+            href="/following"
+            className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink"
+          >
+            Following
           </Link>
 
           {/* Three Dots Menu - Vertical with Dropdown */}
@@ -197,18 +197,51 @@ const ChannelCard = ({ channel }: { channel: ChannelProps }) => {
   );
 };
 
-// Following Page Component
-export default function FollowingPage() {
+// Add Channel Component
+const AddChannelSection = () => {
+  return (
+    <div className="flex flex-col items-center mb-8">
+      <h3 className="text-wanna-green font-bold text-lg mb-4 flex items-center">
+        <Plus size={18} className="mr-1" /> ADD CHANNEL
+      </h3>
+      <div className="flex space-x-4">
+        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 flex items-center space-x-2 transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mr-2"
+          >
+            <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+          </svg>
+          Connect Twitch
+        </button>
+        <button className="bg-black hover:bg-gray-900 text-white px-4 py-2 flex items-center space-x-2 border border-white transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62]">
+          <X size={20} className="mr-2" />
+          Connect X
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// My Channels Page Component
+export default function MyChannelsPage() {
   const [platformFilter, setPlatformFilter] = useState<"all" | "twitch" | "x">(
     "all",
   );
-  const [liveOnly, setLiveOnly] = useState(false);
 
   // Mock channel data
   const channels: ChannelProps[] = [
     {
       id: "1",
-      name: "GamerPro99",
+      name: "MyGamingChannel",
       image:
         "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80",
       platform: "twitch",
@@ -217,7 +250,7 @@ export default function FollowingPage() {
     },
     {
       id: "2",
-      name: "MusicMaestro",
+      name: "MyMusicStream",
       image:
         "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&q=80",
       platform: "x",
@@ -225,7 +258,7 @@ export default function FollowingPage() {
     },
     {
       id: "3",
-      name: "TravelBuddy",
+      name: "MyTravelVlogs",
       image:
         "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=800&q=80",
       platform: "twitch",
@@ -234,46 +267,12 @@ export default function FollowingPage() {
     },
     {
       id: "4",
-      name: "CryptoGuru",
+      name: "MyCryptoTalks",
       image:
         "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80",
       platform: "x",
       isLive: true,
       viewers: 5932,
-    },
-    {
-      id: "5",
-      name: "ArtistExtraordinaire",
-      image:
-        "https://images.unsplash.com/photo-1536924430914-91f9e2041b83?w=800&q=80",
-      platform: "twitch",
-      isLive: false,
-    },
-    {
-      id: "6",
-      name: "ChefSupreme",
-      image:
-        "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80",
-      platform: "x",
-      isLive: false,
-    },
-    {
-      id: "7",
-      name: "ProLeaguePlayer",
-      image:
-        "https://images.unsplash.com/photo-1542751110-97427bbecf20?w=800&q=80",
-      platform: "twitch",
-      isLive: true,
-      viewers: 132456,
-    },
-    {
-      id: "8",
-      name: "FitCoach",
-      image:
-        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
-      platform: "x",
-      isLive: true,
-      viewers: 4532,
     },
   ];
 
@@ -281,11 +280,6 @@ export default function FollowingPage() {
   const filteredChannels = channels.filter((channel) => {
     // Filter by platform
     if (platformFilter !== "all" && channel.platform !== platformFilter) {
-      return false;
-    }
-
-    // Filter by live status
-    if (liveOnly && !channel.isLive) {
       return false;
     }
 
@@ -298,7 +292,7 @@ export default function FollowingPage() {
       <main className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-wanna-green uppercase">
-            Following
+            My Channels
           </h1>
 
           <div className="flex items-center space-x-4">
@@ -326,18 +320,11 @@ export default function FollowingPage() {
                 X
               </Toggle>
             </div>
-
-            {/* Live Only Toggle */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">Live Only</span>
-              <Switch
-                checked={liveOnly}
-                onCheckedChange={setLiveOnly}
-                className="data-[state=checked]:bg-wanna-pink"
-              />
-            </div>
           </div>
         </div>
+
+        {/* Add Channel Section */}
+        <AddChannelSection />
 
         {/* Channel Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -354,9 +341,7 @@ export default function FollowingPage() {
               No channels found
             </h3>
             <p className="text-gray-500 mt-2">
-              {liveOnly
-                ? "None of your followed channels are currently live"
-                : "Try adjusting your filters"}
+              Try adjusting your filters or connect a new channel
             </p>
           </div>
         )}

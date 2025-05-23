@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, MoreVertical, User } from "lucide-react";
+import { Search, MoreVertical, User, X, Users } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -11,6 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import FeaturedContent from "../components/FeaturedContent";
+import CategorySection from "../components/CategorySection";
+import InteractiveElements from "../components/InteractiveElements";
+import FeaturedCategories from "../components/FeaturedCategories";
 
 // Create a custom navbar component directly in this file since there seems to be an issue with the import
 const Navbar = () => {
@@ -20,28 +24,28 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
           {/* Logo */}
           <div className="h-8">
-            <span className="text-xl font-bold text-white">WANNA ?</span>
+            <Link
+              href="/"
+              className="text-xl font-bold text-white hover:text-wanna-pink"
+            >
+              WANNA ?
+            </Link>
           </div>
 
-          {/* Browse Dropdown */}
-          <div className="relative group">
-            <button className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink">
-              Browse
-            </button>
-          </div>
+          {/* Predictions Link */}
+          <Link href="/predictions" className="px-3 py-2 hover:text-[#f70f62]">
+            Predictions
+          </Link>
 
           {/* Following Button */}
-          <Link
-            href="/following"
-            className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink"
-          >
+          <Link href="/following" className="px-3 py-2 hover:text-[#f70f62]">
             Following
           </Link>
 
           {/* Three Dots Menu - Vertical with Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="px-2 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink">
+              <button className="px-2 py-2 hover:text-[#f70f62]">
                 <MoreVertical size={18} />
               </button>
             </DropdownMenuTrigger>
@@ -74,14 +78,14 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-wanna-green outline-none bg-[#3d3d3d]"
+            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
           />
         </div>
 
         <div className="flex items-center space-x-4">
           {/* WANNA Points */}
           <div className="flex items-center">
-            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2">
+            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2 bg-[#F70F62]">
               GET WANNA POINTS
             </button>
             <span className="text-sm">1,250</span>
@@ -100,7 +104,9 @@ const Navbar = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-gray-700" />
               <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                My Channels
+                <Link href="/my-channels" className="w-full">
+                  My Channels
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
                 Transaction History
@@ -116,11 +122,6 @@ const Navbar = () => {
     </nav>
   );
 };
-
-import FeaturedContent from "../components/FeaturedContent";
-import CategorySection from "../components/CategorySection";
-import InteractiveElements from "../components/InteractiveElements";
-import FeaturedCategories from "../components/FeaturedCategories";
 
 export default function HomePage() {
   // Sample data for categories
@@ -145,13 +146,14 @@ export default function HomePage() {
           id: 102,
           title: "Minecraft Building Competition",
           thumbnail:
-            "https://images.unsplash.com/photo-1587573089734-599851b2c3b5?w=800&q=80",
-          viewerCount: 8700,
+            "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80",
+          viewerCount: 876,
           streamer: {
             name: "BlockMaster",
-            avatar:
-              "https://api.dicebear.com/7.x/avataaars/svg?seed=BlockMaster",
+            avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=block2",
           },
+          platform: "x",
+          isLive: false,
         },
         {
           id: 103,
@@ -175,6 +177,7 @@ export default function HomePage() {
             name: "LaneKing",
             avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=LaneKing",
           },
+          platform: "x",
         },
         {
           id: 105,
@@ -187,6 +190,54 @@ export default function HomePage() {
             avatar:
               "https://api.dicebear.com/7.x/avataaars/svg?seed=BuilderPro",
           },
+        },
+        {
+          id: 106,
+          title: "League of Legends ranked grind",
+          thumbnail:
+            "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80",
+          viewerCount: 2340,
+          streamerName: "LeagueQueen",
+          streamerAvatar:
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=queen3",
+          platform: "twitch",
+          isLive: true,
+        },
+        {
+          id: "4",
+          title: "Apex Legends tournament practice",
+          thumbnail:
+            "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+          viewerCount: 1567,
+          streamerName: "ApexPredator",
+          streamerAvatar:
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=apex4",
+          platform: "x",
+          isLive: true,
+        },
+        {
+          id: "5",
+          title: "Fortnite with subscribers",
+          thumbnail:
+            "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?w=800&q=80",
+          viewerCount: 932,
+          streamerName: "BuildKing",
+          streamerAvatar:
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=king5",
+          platform: "twitch",
+          isLive: false,
+        },
+        {
+          id: "6",
+          title: "Call of Duty: Warzone highlights",
+          thumbnail:
+            "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80",
+          viewerCount: 1823,
+          streamerName: "WarzonePro",
+          streamerAvatar:
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=warzone6",
+          platform: "x",
+          isLive: true,
         },
       ],
     },
@@ -205,6 +256,7 @@ export default function HomePage() {
             avatar:
               "https://api.dicebear.com/7.x/avataaars/svg?seed=PianoVirtuoso",
           },
+          platform: "x",
         },
         {
           id: 202,
@@ -281,6 +333,7 @@ export default function HomePage() {
             name: "FitCoach",
             avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=FitCoach",
           },
+          platform: "x",
         },
         {
           id: 304,
@@ -405,6 +458,22 @@ export default function HomePage() {
     ],
   };
 
+  // Define type for streams to use in the page
+  type StreamType = {
+    id: string | number;
+    title: string;
+    thumbnail: string;
+    viewerCount: number;
+    streamerName?: string;
+    streamerAvatar?: string;
+    streamer?: {
+      name: string;
+      avatar: string;
+    };
+    isLive?: boolean;
+    platform?: string;
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-['Neue_Machina',_sans-serif]">
       <Navbar />
@@ -423,9 +492,11 @@ export default function HomePage() {
         <section className="mb-10">
           <InteractiveElements predictions={interactiveElements.predictions} />
           <div className="flex justify-center mt-4">
-            <button className="hover:text-purple-400 font-medium text-white">
-              Show all &gt;
-            </button>
+            <Link href="/predictions">
+              <button className="hover:text-purple-400 font-medium text-white">
+                Show all &gt;
+              </button>
+            </Link>
           </div>
         </section>
 
@@ -435,7 +506,7 @@ export default function HomePage() {
             Categories
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-800 p-4 flex items-center space-x-3 hover:bg-gray-700 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 cursor-pointer border-0 border-none">
+            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -459,7 +530,7 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Gaming</span>
             </div>
-            <div className="bg-gray-800 p-4 flex items-center space-x-3 hover:bg-gray-700 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 cursor-pointer border-0 border-none">
+            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -484,7 +555,7 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Sports</span>
             </div>
-            <div className="bg-gray-800 p-4 flex items-center space-x-3 hover:bg-gray-700 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 cursor-pointer border-0 border-none">
+            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -505,7 +576,7 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Music</span>
             </div>
-            <div className="bg-gray-800 p-4 flex items-center space-x-3 hover:bg-gray-700 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 cursor-pointer border-0 border-none">
+            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -527,7 +598,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex justify-center mt-4">
-            <button className="bg-[#00FF85] hover:bg-[#00FF85]/90 text-black font-bold px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200">
+            <button className="hover:bg-[#f70f62] font-bold px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 bg-transparent text-white">
               Show all &gt;
             </button>
           </div>
@@ -543,8 +614,16 @@ export default function HomePage() {
                 title: stream.title,
                 thumbnail: stream.thumbnail,
                 viewerCount: stream.viewerCount,
-                streamerName: stream.streamer.name,
-                streamerAvatar: stream.streamer.avatar,
+                streamerName:
+                  stream.streamerName ||
+                  (stream.streamer ? stream.streamer.name : "Unknown Streamer"),
+                streamerAvatar:
+                  stream.streamerAvatar ||
+                  (stream.streamer
+                    ? stream.streamer.avatar
+                    : "https://api.dicebear.com/7.x/avataaars/svg?seed=default"),
+                isLive: stream.isLive !== undefined ? stream.isLive : true,
+                platform: stream.platform || "twitch",
               }))}
             />
           </section>

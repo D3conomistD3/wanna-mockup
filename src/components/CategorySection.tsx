@@ -1,11 +1,10 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarImage } from "@/components/ui/avatar";
-import { AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Users } from "lucide-react";
 
 interface StreamProps {
   id: string;
@@ -14,6 +13,8 @@ interface StreamProps {
   viewerCount: number;
   streamerName: string;
   streamerAvatar: string;
+  isLive?: boolean;
+  platform?: string;
 }
 
 interface CategorySectionProps {
@@ -35,6 +36,8 @@ const CategorySection = ({
       viewerCount: 1245,
       streamerName: "GamerPro",
       streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=gamer1",
+      isLive: true,
+      platform: "twitch",
     },
     {
       id: "2",
@@ -44,6 +47,8 @@ const CategorySection = ({
       viewerCount: 876,
       streamerName: "BlockMaster",
       streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=block2",
+      isLive: false,
+      platform: "x",
     },
     {
       id: "3",
@@ -53,6 +58,8 @@ const CategorySection = ({
       viewerCount: 2340,
       streamerName: "LeagueQueen",
       streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=queen3",
+      isLive: true,
+      platform: "twitch",
     },
     {
       id: "4",
@@ -62,6 +69,8 @@ const CategorySection = ({
       viewerCount: 1567,
       streamerName: "ApexPredator",
       streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=apex4",
+      isLive: true,
+      platform: "x",
     },
     {
       id: "5",
@@ -71,6 +80,8 @@ const CategorySection = ({
       viewerCount: 932,
       streamerName: "BuildKing",
       streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=king5",
+      isLive: false,
+      platform: "twitch",
     },
     {
       id: "6",
@@ -81,6 +92,8 @@ const CategorySection = ({
       streamerName: "WarzonePro",
       streamerAvatar:
         "https://api.dicebear.com/7.x/avataaars/svg?seed=warzone6",
+      isLive: true,
+      platform: "x",
     },
   ];
 
@@ -112,10 +125,45 @@ const CategorySection = ({
                     <img
                       src={stream.thumbnail}
                       alt={stream.title}
-                      className="w-full h-[135px] aspect-square object-cover rounded-none"
+                      className="w-full h-[135px] object-cover rounded-none"
                     />
-                    <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 font-bold">
-                      {formatViewerCount(stream.viewerCount)} viewers
+                    {stream.isLive && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute top-2 left-2 px-2 py-0.5 bg-[#f70f62] uppercase font-bold rounded-none"
+                      >
+                        LIVE
+                      </Badge>
+                    )}
+                    {/* Platform logo */}
+                    {stream.platform && (
+                      <div className="absolute top-2 right-2 bg-black/70 p-1 rounded-sm">
+                        {stream.platform === "twitch" ? (
+                          <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="#9146FF"
+                          >
+                            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+                          </svg>
+                        ) : stream.platform === "x" ? (
+                          <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="white"
+                          >
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
+                        ) : null}
+                      </div>
+                    )}
+                    <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
+                      <Users className="h-3 w-3 text-wanna-green" />
+                      <span className="text-xs font-bold">
+                        {formatViewerCount(stream.viewerCount)}
+                      </span>
                     </div>
                   </div>
                   <CardContent className="p-3 bg-gray-900">

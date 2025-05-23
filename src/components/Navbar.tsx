@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, Users } from "lucide-react";
+import { Link } from "next/link";
 
 interface InteractiveElementsProps {
   predictions?: Array<{
