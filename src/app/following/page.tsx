@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Search,
-  MoreVertical,
-  User,
-  X,
-  Users,
-  Heart,
-  Plus,
-} from "lucide-react";
+import { X, Users, Heart, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,183 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-
-// Navbar component from the homepage
-const Navbar = ({
-  searchQuery,
-  setSearchQuery,
-  searchResults,
-  setShowSearchResults,
-  showSearchResults,
-  searchResultsRef,
-}) => {
-  return (
-    <nav className="text-white p-4 bg-[#1d1d1d]">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          {/* Logo */}
-          <div className="h-8">
-            <Link
-              href="/"
-              className="text-xl font-bold text-white hover:text-wanna-pink"
-            >
-              WANNA ?
-            </Link>
-          </div>
-
-          {/* Predictions Link */}
-          <Link href="/predictions" className="px-3 py-2 hover:text-[#f70f62]">
-            Predictions
-          </Link>
-
-          {/* Following Button - Active state */}
-          <Link
-            href="/following"
-            className="px-3 py-2 bg-gray-800 text-[#f70f62]"
-          >
-            Following
-          </Link>
-
-          {/* Three Dots Menu - Vertical with Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="px-2 py-2 hover:text-[#f70f62]">
-                <MoreVertical size={18} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Guides
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Docs
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Community
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Support
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Send Feedback
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        {/* Search Field with Icon */}
-        <div className="flex-1 max-w-md mx-4 relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() =>
-              searchQuery.trim() !== "" && setShowSearchResults(true)
-            }
-          />
-
-          {/* Search Results Dropdown */}
-          {showSearchResults && searchResults.length > 0 && (
-            <div
-              ref={searchResultsRef}
-              className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-700 shadow-lg max-h-96 overflow-y-auto"
-            >
-              {searchResults.map((result) => (
-                <Link
-                  key={result.id}
-                  href={`/channel/${result.id}`}
-                  className="flex items-center p-3 hover:bg-gray-700 border-b border-gray-700 last:border-b-0"
-                  onClick={() => setShowSearchResults(false)}
-                >
-                  <div className="w-10 h-10 mr-3 overflow-hidden">
-                    <img
-                      src={result.image}
-                      alt={result.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-bold text-white">{result.name}</div>
-                    <div className="text-xs text-gray-400 flex items-center">
-                      {result.platform === "twitch" ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-purple-500 mr-1"
-                        >
-                          <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
-                        </svg>
-                      ) : (
-                        <X className="h-3 w-3 mr-1" />
-                      )}
-                      {result.platform.charAt(0).toUpperCase() +
-                        result.platform.slice(1)}
-                      {result.isLive && (
-                        <span className="ml-2 text-[#f70f62] font-bold">
-                          • LIVE
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* WANNA Points */}
-          <div className="flex items-center">
-            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2 bg-[#F70F62]">
-              GET WANNA POINTS
-            </button>
-            <span className="text-sm">1,250</span>
-          </div>
-
-          {/* Profile Icon with Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-none bg-gray-700 flex items-center justify-center hover:bg-gray-600">
-                <User size={16} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
-              <DropdownMenuLabel className="text-gray-400">
-                xStreamUser123
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                <Link href="/my-channels" className="w-full">
-                  My Channels
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Transaction History
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Log Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-    </nav>
-  );
-};
+import Navbar from "@/components/Navbar";
 
 // Channel Card Component
 interface ChannelProps {
@@ -222,7 +38,7 @@ const ChannelCard = ({ channel }: { channel: ChannelProps }) => {
   return (
     <Link
       href={`/channel/${channel.id}`}
-      className={`relative overflow-hidden group cursor-pointer transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] ${channel.platform === "twitch" ? "border border-purple-500" : "border border-white"}`}
+      className={`relative overflow-hidden group cursor-pointer transition-all duration-200 ${channel.platform === "twitch" ? "border border-purple-500 twitch-hover-shadow" : "border border-white x-hover-shadow"}`}
     >
       {/* Background Image */}
       <div className="relative w-full h-48">
@@ -287,10 +103,6 @@ export default function FollowingPage() {
   );
   const [liveOnly, setLiveOnly] = useState(false);
   const [isAddChannelsOpen, setIsAddChannelsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<ChannelProps[]>([]);
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const searchResultsRef = useRef<HTMLDivElement>(null);
 
   // Mock channel data
   const [channels, setChannels] = useState<ChannelProps[]>([
@@ -453,43 +265,6 @@ export default function FollowingPage() {
     }
   };
 
-  // Handle search functionality
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setSearchResults([]);
-      setShowSearchResults(false);
-      return;
-    }
-
-    // Combine all accounts for search
-    const allAccounts = [...mockAccounts.twitch, ...mockAccounts.x];
-
-    // Filter accounts based on search query
-    const results = allAccounts.filter((account) =>
-      account.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-
-    setSearchResults(results);
-    setShowSearchResults(true);
-  }, [searchQuery]);
-
-  // Close search results when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchResultsRef.current &&
-        !searchResultsRef.current.contains(event.target as Node)
-      ) {
-        setShowSearchResults(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   // Filter channels based on selected filters
   const filteredChannels = channels.filter((channel) => {
     // Filter by platform
@@ -507,14 +282,7 @@ export default function FollowingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-['Neue_Machina',_sans-serif]">
-      <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        searchResults={searchResults}
-        setShowSearchResults={setShowSearchResults}
-        showSearchResults={showSearchResults}
-        searchResultsRef={searchResultsRef}
-      />
+      <Navbar activePage="following" />
       <main className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
@@ -557,11 +325,11 @@ export default function FollowingPage() {
 
             {/* Live Only Toggle */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm">Live Only</span>
+              <span className="text-sm font-bold uppercase">LIVE ONLY</span>
               <Switch
                 checked={liveOnly}
                 onCheckedChange={setLiveOnly}
-                className="data-[state=checked]:bg-wanna-pink"
+                className="data-[state=checked]:bg-[#f70f62] rounded-none h-6 w-12"
               />
             </div>
           </div>
@@ -636,9 +404,10 @@ export default function FollowingPage() {
                     (ch) => ch.id === account.id,
                   );
                   return (
-                    <div
+                    <Link
                       key={account.id}
-                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors"
+                      href={`/channel/${account.id}`}
+                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors w-full"
                     >
                       <div className="flex items-center">
                         <div className="w-12 h-12 mr-4 overflow-hidden">
@@ -677,7 +446,11 @@ export default function FollowingPage() {
                         </div>
                       </div>
                       <Button
-                        onClick={() => toggleFollow(account)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFollow(account);
+                        }}
                         variant={isFollowed ? "outline" : "default"}
                         className={
                           isFollowed
@@ -691,7 +464,7 @@ export default function FollowingPage() {
                         />
                         {isFollowed ? "Following" : "Follow"}
                       </Button>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -704,9 +477,10 @@ export default function FollowingPage() {
                     (ch) => ch.id === account.id,
                   );
                   return (
-                    <div
+                    <Link
                       key={account.id}
-                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors"
+                      href={`/channel/${account.id}`}
+                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors w-full"
                     >
                       <div className="flex items-center">
                         <div className="w-12 h-12 mr-4 overflow-hidden">
@@ -731,7 +505,11 @@ export default function FollowingPage() {
                         </div>
                       </div>
                       <Button
-                        onClick={() => toggleFollow(account)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFollow(account);
+                        }}
                         variant={isFollowed ? "outline" : "default"}
                         className={
                           isFollowed
@@ -745,7 +523,7 @@ export default function FollowingPage() {
                         />
                         {isFollowed ? "Following" : "Follow"}
                       </Button>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

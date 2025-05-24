@@ -1,284 +1,266 @@
 "use client";
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect, useRef } from "react";
+import { Search, MoreVertical, User, X, Users } from "lucide-react";
+import Link from "next/link";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Clock, Users } from "lucide-react";
-import { Link } from "next/link";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-interface InteractiveElementsProps {
-  predictions?: Array<{
-    id: string;
-    title: string;
-    options: Array<{ id: string; name: string; odds: string }>;
-    timeLeft: string;
-    participants: number;
-  }>;
-  polls?: Array<{
-    id: string;
-    question: string;
-    options: Array<{ id: string; text: string; votes: number }>;
-    timeLeft: string;
-    participants: number;
-  }>;
-  powerChats?: Array<{
-    id: string;
-    title: string;
-    activeUsers: number;
-    timeLeft: string;
-  }>;
+interface NavbarProps {
+  activePage?: "home" | "predictions" | "following" | "none";
 }
 
-export default function InteractiveElements({
-  predictions = [
+export default function Navbar({ activePage = "none" }: NavbarProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
+
+  // Mock accounts for search
+  const mockAccounts = [
     {
-      id: "pred-1",
-      title: "Will xQc reach 100k viewers today?",
-      options: [
-        { id: "opt-1", name: "Yes", odds: "1.5x" },
-        { id: "opt-2", name: "No", odds: "2.2x" },
-      ],
-      timeLeft: "2h 15m",
-      participants: 1243,
+      id: "twitch-1",
+      name: "NinjaStreamer",
+      image:
+        "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=800&q=80",
+      platform: "twitch",
+      isLive: true,
+      viewers: 45600,
     },
     {
-      id: "pred-2",
-      title: "Will Pokimane win this match?",
-      options: [
-        { id: "opt-3", name: "Yes", odds: "1.8x" },
-        { id: "opt-4", name: "No", odds: "1.9x" },
-      ],
-      timeLeft: "45m",
-      participants: 876,
+      id: "twitch-2",
+      name: "ShroudGaming",
+      image:
+        "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80",
+      platform: "twitch",
+      isLive: false,
     },
     {
-      id: "pred-3",
-      title: "Will Ninja get 5+ kills this game?",
-      options: [
-        { id: "opt-5", name: "Yes", odds: "1.3x" },
-        { id: "opt-6", name: "No", odds: "2.5x" },
-      ],
-      timeLeft: "30m",
-      participants: 2156,
-    },
-  ],
-  polls = [
-    {
-      id: "poll-1",
-      question: "Which game should I play next?",
-      options: [
-        { id: "poll-opt-1", text: "Fortnite", votes: 342 },
-        { id: "poll-opt-2", text: "Valorant", votes: 528 },
-        { id: "poll-opt-3", text: "Minecraft", votes: 187 },
-      ],
-      timeLeft: "5m",
-      participants: 1057,
+      id: "x-1",
+      name: "ElonMusk",
+      image:
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
+      platform: "x",
+      isLive: false,
     },
     {
-      id: "poll-2",
-      question: "Best new game release?",
-      options: [
-        { id: "poll-opt-4", text: "Elden Ring", votes: 876 },
-        { id: "poll-opt-5", text: "Starfield", votes: 654 },
-        { id: "poll-opt-6", text: "Baldur's Gate 3", votes: 1243 },
-      ],
-      timeLeft: "1h 30m",
-      participants: 2773,
+      id: "x-2",
+      name: "MrBeast",
+      image:
+        "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80",
+      platform: "x",
+      isLive: true,
+      viewers: 78900,
     },
-  ],
-  powerChats = [
-    {
-      id: "chat-1",
-      title: "VIP Chat with Shroud",
-      activeUsers: 156,
-      timeLeft: "45m",
-    },
-    {
-      id: "chat-2",
-      title: "Subscriber-only Q&A",
-      activeUsers: 324,
-      timeLeft: "1h 15m",
-    },
-    {
-      id: "chat-3",
-      title: "Tournament Discussion",
-      activeUsers: 578,
-      timeLeft: "3h",
-    },
-  ],
-}: InteractiveElementsProps) {
+  ];
+
+  // Handle search functionality
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    // Filter accounts based on search query
+    const results = mockAccounts.filter((account) =>
+      account.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
+    setSearchResults(results);
+    setShowSearchResults(true);
+  }, [searchQuery]);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="w-full bg-background p-4 md:p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-foreground">
-          Interactive Elements
-        </h2>
-        <Button
-          variant="ghost"
-          className="text-primary flex items-center gap-1"
-        >
-          View All <ArrowRight className="h-4 w-4" />
-        </Button>
+    <nav className="text-white p-4 bg-[#1d1d1d]">
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-6">
+          {/* Logo */}
+          <div className="h-8">
+            <Link
+              href="/"
+              className="text-xl font-bold text-white hover:text-wanna-pink"
+            >
+              WANNA ?
+            </Link>
+          </div>
+
+          {/* Predictions Link */}
+          <Link
+            href="/predictions"
+            className={`px-3 py-2 ${activePage === "predictions" ? "bg-gray-800 text-[#f70f62]" : "hover:text-[#f70f62]"}`}
+          >
+            Predictions
+          </Link>
+
+          {/* Following Button */}
+          <Link
+            href="/following"
+            className={`px-3 py-2 ${activePage === "following" ? "bg-gray-800 text-[#f70f62]" : "hover:text-[#f70f62]"}`}
+          >
+            Following
+          </Link>
+
+          {/* Three Dots Menu - Vertical with Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="px-2 py-2 hover:text-[#f70f62]">
+                <MoreVertical size={18} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Guides
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Docs
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Community
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-gray-700" />
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Support
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Send Feedback
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Search Field with Icon */}
+        <div className="flex-1 max-w-md mx-4 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() =>
+              searchQuery.trim() !== "" && setShowSearchResults(true)
+            }
+          />
+
+          {/* Search Results Dropdown */}
+          {showSearchResults && searchResults.length > 0 && (
+            <div
+              ref={searchResultsRef}
+              className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-700 shadow-lg max-h-96 overflow-y-auto"
+            >
+              {searchResults.map((result) => (
+                <Link
+                  key={result.id}
+                  href={`/channel/${result.id}`}
+                  className="flex items-center p-3 hover:bg-gray-700 border-b border-gray-700 last:border-b-0"
+                  onClick={() => setShowSearchResults(false)}
+                >
+                  <div className="w-10 h-10 mr-3 overflow-hidden">
+                    <img
+                      src={result.image}
+                      alt={result.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white">{result.name}</div>
+                    <div className="text-xs text-gray-400 flex items-center">
+                      {result.platform === "twitch" ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-purple-500 mr-1"
+                        >
+                          <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                        </svg>
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
+                      {result.platform.charAt(0).toUpperCase() +
+                        result.platform.slice(1)}
+                      {result.isLive && (
+                        <span className="ml-2 text-[#f70f62] font-bold">
+                          • LIVE
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center space-x-4">
+          {/* WANNA Points */}
+          <div className="flex items-center">
+            <button className="wanna-points-gradient px-3 py-1 rounded-none mr-2">
+              GET WANNA POINTS
+            </button>
+            <span className="text-sm">1,250</span>
+          </div>
+
+          {/* Profile Icon with Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-8 h-8 rounded-none bg-gray-700 flex items-center justify-center hover:bg-gray-600">
+                <User size={16} fill="none" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
+              <DropdownMenuLabel className="text-gray-400">
+                xStreamUser123
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-gray-700" />
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                <Link href="/my-channels" className="w-full">
+                  My Channels
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Transaction History
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-gray-700" />
+              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
+                Log Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-
-      <Tabs defaultValue="predictions" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="predictions">Predictions</TabsTrigger>
-          <TabsTrigger value="polls">Polls</TabsTrigger>
-          <TabsTrigger value="powerchats">Power Chats</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="predictions" className="space-y-4">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {predictions.map((prediction) => (
-                <CarouselItem
-                  key={prediction.id}
-                  className="md:basis-1/2 lg:basis-1/3"
-                >
-                  <Card className="bg-card border-primary/20 hover:border-primary/50 transition-all">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <Badge
-                          variant="outline"
-                          className="bg-primary/10 text-primary flex items-center gap-1"
-                        >
-                          <Clock className="h-3 w-3" /> {prediction.timeLeft}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Users className="h-3 w-3" />{" "}
-                          {prediction.participants.toLocaleString()}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold mb-3">{prediction.title}</h3>
-                      <div className="grid grid-cols-2 gap-2">
-                        {prediction.options.map((option) => (
-                          <Button
-                            key={option.id}
-                            variant="outline"
-                            className="justify-between hover:bg-primary/10"
-                          >
-                            {option.name}
-                            <span className="text-primary font-semibold">
-                              {option.odds}
-                            </span>
-                          </Button>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
-          </Carousel>
-        </TabsContent>
-
-        <TabsContent value="polls" className="space-y-4">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {polls.map((poll) => (
-                <CarouselItem
-                  key={poll.id}
-                  className="md:basis-1/2 lg:basis-1/3"
-                >
-                  <Card className="bg-card border-primary/20 hover:border-primary/50 transition-all">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <Badge
-                          variant="outline"
-                          className="bg-primary/10 text-primary flex items-center gap-1"
-                        >
-                          <Clock className="h-3 w-3" /> {poll.timeLeft}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Users className="h-3 w-3" />{" "}
-                          {poll.participants.toLocaleString()}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold mb-3">{poll.question}</h3>
-                      <div className="space-y-2">
-                        {poll.options.map((option) => {
-                          const totalVotes = poll.options.reduce(
-                            (sum, opt) => sum + opt.votes,
-                            0,
-                          );
-                          const percentage = Math.round(
-                            (option.votes / totalVotes) * 100,
-                          );
-
-                          return (
-                            <div key={option.id} className="relative">
-                              <div
-                                className="absolute top-0 left-0 h-full bg-primary/20 rounded-md"
-                                style={{ width: `${percentage}%` }}
-                              />
-                              <Button
-                                variant="outline"
-                                className="w-full justify-between relative z-10 bg-transparent"
-                              >
-                                {option.text}
-                                <span className="text-primary font-semibold">
-                                  {percentage}%
-                                </span>
-                              </Button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
-          </Carousel>
-        </TabsContent>
-
-        <TabsContent value="powerchats" className="space-y-4">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {powerChats.map((chat) => (
-                <CarouselItem
-                  key={chat.id}
-                  className="md:basis-1/2 lg:basis-1/3"
-                >
-                  <Card className="bg-card border-primary/20 hover:border-primary/50 transition-all">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <Badge
-                          variant="outline"
-                          className="bg-primary/10 text-primary flex items-center gap-1"
-                        >
-                          <Clock className="h-3 w-3" /> {chat.timeLeft}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Users className="h-3 w-3" /> {chat.activeUsers}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold mb-3">{chat.title}</h3>
-                      <Button className="w-full">Join Chat</Button>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
-          </Carousel>
-        </TabsContent>
-      </Tabs>
-    </div>
+    </nav>
   );
 }

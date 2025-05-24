@@ -84,3 +84,43 @@
   --wanna-pink: #f70f62;
   --wanna-green: #00ff85;
 }
+
+.wanna-points-gradient {
+  background: linear-gradient(45deg, #00ff85, #f70f62);
+  color: black;
+  font-weight: bold;
+}
+
+.twitch-hover-shadow:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 4px 4px 0px 0px #9146ff;
+  transition: all 0.2s ease;
+}
+
+.x-hover-shadow:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 4px 4px 0px 0px #ffffff;
+  transition: all 0.2s ease;
+}
+
+.wanna-hover-shadow:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 4px 4px 0px 0px #f70f62;
+  transition: all 0.2s ease;
+}
+
+.stats-box:hover {
+  border: 2px solid #00ff85;
+  cursor: pointer;
+}
+
+/* Custom styles for the Live Only switch */
+[data-state="checked"] > .switch-thumb {
+  transform: translateX(100%);
+}
+
+.switch-thumb {
+  border-radius: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}

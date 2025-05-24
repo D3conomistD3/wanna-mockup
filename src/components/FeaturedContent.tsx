@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
@@ -28,35 +29,79 @@ const FeaturedContent = ({
   streams = defaultStreams,
 }: FeaturedContentProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(streams.length / itemsPerPage);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + itemsPerPage >= streams.length ? 0 : prevIndex + itemsPerPage,
-    );
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % streams.length);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex - itemsPerPage < 0
-        ? Math.max(0, streams.length - itemsPerPage)
-        : prevIndex - itemsPerPage,
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + streams.length) % streams.length,
     );
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
-  const visibleStreams = streams.slice(
-    currentIndex,
-    currentIndex + itemsPerPage,
-  );
+  // Auto-rotate carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [currentIndex, isTransitioning]);
+
+  // Calculate total pages for pagination
+  const totalPages = streams.length;
+
+  // Calculate indices for visible streams
+  const centerIndex = currentIndex;
+  const leftIndex = (currentIndex - 1 + streams.length) % streams.length;
+  const rightIndex = (currentIndex + 1) % streams.length;
 
   return (
     <div className="w-full bg-background py-6 bg-transparent">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {visibleStreams.map((stream) => (
-            <StreamCard key={stream.id} stream={stream} />
-          ))}
+        <div className="relative h-[400px] overflow-hidden" ref={carouselRef}>
+          {/* Left Stream */}
+          <div
+            className="absolute transition-all duration-500 w-[30%] top-[50px] left-[5%] z-10 opacity-70 transform scale-90"
+            onClick={prevSlide}
+          >
+            <StreamCard stream={streams[leftIndex]} position="left" />
+          </div>
+
+          {/* Center Stream (Featured) */}
+          <div className="absolute transition-all duration-500 w-[40%] top-0 left-[30%] z-20 transform scale-100">
+            <StreamCard stream={streams[centerIndex]} position="center" />
+          </div>
+
+          {/* Right Stream */}
+          <div
+            className="absolute transition-all duration-500 w-[30%] top-[50px] right-[5%] z-10 opacity-70 transform scale-90"
+            onClick={nextSlide}
+          >
+            <StreamCard stream={streams[rightIndex]} position="right" />
+          </div>
+
+          {/* Navigation Controls */}
+          <button
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 z-30 hover:bg-black/80"
+            onClick={prevSlide}
+          >
+            <ChevronLeft className="text-white" />
+          </button>
+          <button
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 z-30 hover:bg-black/80"
+            onClick={nextSlide}
+          >
+            <ChevronRight className="text-white" />
+          </button>
         </div>
         <div className="flex justify-center mt-4">
           {Array.from({ length: totalPages }).map((_, index) => (
@@ -68,9 +113,17 @@ const FeaturedContent = ({
   );
 };
 
-const StreamCard = ({ stream }: { stream: StreamProps }) => {
+const StreamCard = ({
+  stream,
+  position = "center",
+}: {
+  stream: StreamProps;
+  position?: "left" | "center" | "right";
+}) => {
   return (
-    <Card className="overflow-hidden bg-gray-900 transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group rounded-none border-0 border-none">
+    <Card
+      className={`overflow-hidden bg-gray-900 transition-all duration-200 group rounded-none border-0 border-none ${stream.platform === "twitch" ? "twitch-hover-shadow" : "x-hover-shadow"} cursor-pointer`}
+    >
       <div className="relative">
         <img
           src={stream.thumbnail}
@@ -106,9 +159,12 @@ const StreamCard = ({ stream }: { stream: StreamProps }) => {
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-bold text-white">
+            <Link
+              href={`/channel/${stream.id}`}
+              className="text-sm font-bold text-white hover:underline"
+            >
               {stream.streamer.name}
-            </p>
+            </Link>
             <p className="text-xs text-wanna-green uppercase">
               {stream.category}
             </p>

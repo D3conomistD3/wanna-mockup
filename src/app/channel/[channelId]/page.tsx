@@ -1,16 +1,8 @@
 "use client";
 
 import React from "react";
-import { Search, MoreVertical, User, X, Users, Heart } from "lucide-react";
+import { MoreVertical, User, X, Users, Heart } from "lucide-react";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Card,
   CardContent,
@@ -23,113 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock } from "lucide-react";
 import { useParams } from "next/navigation";
-
-// Navbar component from the homepage
-const Navbar = () => {
-  return (
-    <nav className="text-white p-4 bg-[#1d1d1d]">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          {/* Logo */}
-          <div className="h-8">
-            <Link
-              href="/"
-              className="text-xl font-bold text-white hover:text-wanna-pink"
-            >
-              WANNA ?
-            </Link>
-          </div>
-
-          {/* Predictions Link */}
-          <Link href="/predictions" className="px-3 py-2 hover:text-[#f70f62]">
-            Predictions
-          </Link>
-
-          {/* Following Button */}
-          <Link href="/following" className="px-3 py-2 hover:text-[#f70f62]">
-            Following
-          </Link>
-
-          {/* Three Dots Menu - Vertical with Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="px-2 py-2 hover:text-[#f70f62]">
-                <MoreVertical size={18} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Guides
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Docs
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Community
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Support
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Send Feedback
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        {/* Search Field with Icon */}
-        <div className="flex-1 max-w-md mx-4 relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
-          />
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* WANNA Points */}
-          <div className="flex items-center">
-            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2 bg-[#F70F62]">
-              GET WANNA POINTS
-            </button>
-            <span className="text-sm">1,250</span>
-          </div>
-
-          {/* Profile Icon with Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-none bg-gray-700 flex items-center justify-center hover:bg-gray-600">
-                <User size={16} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 text-white border-gray-700">
-              <DropdownMenuLabel className="text-gray-400">
-                xStreamUser123
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                <Link href="/my-channels" className="w-full">
-                  My Channels
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Transaction History
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-gray-700" />
-              <DropdownMenuItem className="hover:bg-gray-700 cursor-pointer">
-                Log Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-    </nav>
-  );
-};
+import Navbar from "@/components/Navbar";
 
 // Prediction Card Component
 const PredictionCard = ({ type = "PREDICTION", showButton = true }) => {
@@ -320,7 +206,7 @@ export default function ChannelPage() {
 
                 <div className="flex items-center gap-4 mt-4 md:mt-0">
                   <div className="flex items-center gap-2">
-                    <div className="bg-[#1d1d1d] p-3">
+                    <div className="bg-[#1d1d1d] p-3 stats-box transition-all duration-200">
                       <div className="flex items-center gap-1">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -342,7 +228,7 @@ export default function ChannelPage() {
                       </div>
                       <div className="text-xs text-gray-400">Connected</div>
                     </div>
-                    <div className="bg-[#1d1d1d] p-3">
+                    <div className="bg-[#1d1d1d] p-3 stats-box transition-all duration-200">
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4 text-[#00ff85]" />
                         <span className="font-bold text-[#00ff85]">
@@ -512,8 +398,8 @@ export default function ChannelPage() {
                         </div>
                       )}
                       <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
-                        <Users className="h-3 w-3 text-wanna-green" />
-                        <span className="text-xs font-bold">
+                        <Users className="h-3 w-3 text-white/100" />
+                        <span className="text-xs font-bold text-white/100">
                           {stream.viewerCount.toString()}
                         </span>
                       </div>
@@ -537,7 +423,7 @@ export default function ChannelPage() {
                           <h3 className="text-sm font-bold text-white truncate group-hover:text-wanna-green transition-colors">
                             {stream.title}
                           </h3>
-                          <p className="text-xs text-wanna-green uppercase font-bold">
+                          <p className="text-xs uppercase font-bold text-white/100">
                             {stream.streamerName}
                           </p>
                         </div>

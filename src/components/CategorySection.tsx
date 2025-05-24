@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -120,7 +121,9 @@ const CategorySection = ({
           <div className="flex space-x-4 pb-4">
             {displayStreams.slice(0, 4).map((stream) => (
               <div key={stream.id} className="min-w-[240px] max-w-[240px]">
-                <Card className="overflow-hidden bg-gray-900 transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group rounded-none border-0 border-none">
+                <Card
+                  className={`overflow-hidden bg-gray-900 transition-all duration-200 group rounded-none border-0 border-none ${stream.platform === "twitch" ? "twitch-hover-shadow" : "x-hover-shadow"}`}
+                >
                   <div className="relative">
                     <img
                       src={stream.thumbnail}
@@ -159,9 +162,9 @@ const CategorySection = ({
                         ) : null}
                       </div>
                     )}
-                    <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
-                      <Users className="h-3 w-3 text-wanna-green" />
-                      <span className="text-xs font-bold">
+                    <div className="absolute bottom-2 right-2 px-2 py-1 flex items-center gap-1 bg-black/70">
+                      <Users className="h-3 w-3 text-white/100" />
+                      <span className="text-xs font-bold text-white/100">
                         {formatViewerCount(stream.viewerCount)}
                       </span>
                     </div>
@@ -185,9 +188,12 @@ const CategorySection = ({
                         <h3 className="text-sm font-bold text-white truncate group-hover:text-wanna-green transition-colors">
                           {stream.title}
                         </h3>
-                        <p className="text-xs text-wanna-green uppercase font-bold">
+                        <Link
+                          href={`/channel/${stream.id}`}
+                          className="text-xs text-wanna-green uppercase font-bold hover:underline"
+                        >
                           {stream.streamerName}
-                        </p>
+                        </Link>
                       </div>
                     </div>
                   </CardContent>
