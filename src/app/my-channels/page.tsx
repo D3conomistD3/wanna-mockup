@@ -30,25 +30,20 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Browse Dropdown */}
-          <div className="relative group">
-            <button className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink">
-              Browse
-            </button>
-          </div>
+          {/* Predictions Link */}
+          <Link href="/predictions" className="px-3 py-2 hover:text-[#f70f62]">
+            Predictions
+          </Link>
 
           {/* Following Button */}
-          <Link
-            href="/following"
-            className="px-3 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink"
-          >
+          <Link href="/following" className="px-3 py-2 hover:text-[#f70f62]">
             Following
           </Link>
 
           {/* Three Dots Menu - Vertical with Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="px-2 py-2 rounded hover:bg-gray-800 hover:text-wanna-pink">
+              <button className="px-2 py-2 hover:text-[#f70f62]">
                 <MoreVertical size={18} />
               </button>
             </DropdownMenuTrigger>
@@ -81,14 +76,14 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-wanna-green outline-none bg-[#3d3d3d]"
+            className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
           />
         </div>
 
         <div className="flex items-center space-x-4">
           {/* WANNA Points */}
           <div className="flex items-center">
-            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2">
+            <button className="bg-wanna-pink text-white px-3 py-1 rounded-none mr-2 bg-[#F70F62]">
               GET WANNA POINTS
             </button>
             <span className="text-sm">1,250</span>
@@ -138,7 +133,8 @@ interface ChannelProps {
 
 const ChannelCard = ({ channel }: { channel: ChannelProps }) => {
   return (
-    <div
+    <Link
+      href={`/channel/${channel.id}`}
       className={`relative overflow-hidden group cursor-pointer transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] ${channel.platform === "twitch" ? "border border-purple-500" : "border border-white"}`}
     >
       {/* Background Image */}
@@ -193,7 +189,7 @@ const ChannelCard = ({ channel }: { channel: ChannelProps }) => {
           <h3 className="text-white font-bold">{channel.name}</h3>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

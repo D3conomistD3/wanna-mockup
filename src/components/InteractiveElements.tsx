@@ -218,7 +218,7 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
       <CardFooter className="flex justify-between pt-2 border-t border-gray-800 bg-[#3d3d3d]">
         <div className="flex items-center text-xs text-gray-400">
           <Users className="h-3 w-3 mr-1" />
-          {prediction.participants.toLocaleString()} participating
+          {prediction.participants.toLocaleString()} participants
         </div>
         <Button
           size="sm"
