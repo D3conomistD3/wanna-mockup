@@ -1,7 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, MoreVertical, User, X, Users } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Search,
+  MoreVertical,
+  User,
+  X,
+  Users,
+  Heart,
+  Plus,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +21,25 @@ import {
 import { Toggle } from "@/components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 // Navbar component from the homepage
-const Navbar = () => {
+const Navbar = ({
+  searchQuery,
+  setSearchQuery,
+  searchResults,
+  setShowSearchResults,
+  showSearchResults,
+  searchResultsRef,
+}) => {
   return (
     <nav className="text-white p-4 bg-[#1d1d1d]">
       <div className="container mx-auto flex items-center justify-between">
@@ -81,7 +104,67 @@ const Navbar = () => {
             type="text"
             placeholder="Search..."
             className="w-full pl-10 pr-4 py-2 rounded-none text-white border-transparent focus:border-[#00ff85] focus:border-2 outline-none bg-[#3d3d3d]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() =>
+              searchQuery.trim() !== "" && setShowSearchResults(true)
+            }
           />
+
+          {/* Search Results Dropdown */}
+          {showSearchResults && searchResults.length > 0 && (
+            <div
+              ref={searchResultsRef}
+              className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-700 shadow-lg max-h-96 overflow-y-auto"
+            >
+              {searchResults.map((result) => (
+                <Link
+                  key={result.id}
+                  href={`/channel/${result.id}`}
+                  className="flex items-center p-3 hover:bg-gray-700 border-b border-gray-700 last:border-b-0"
+                  onClick={() => setShowSearchResults(false)}
+                >
+                  <div className="w-10 h-10 mr-3 overflow-hidden">
+                    <img
+                      src={result.image}
+                      alt={result.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white">{result.name}</div>
+                    <div className="text-xs text-gray-400 flex items-center">
+                      {result.platform === "twitch" ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-purple-500 mr-1"
+                        >
+                          <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                        </svg>
+                      ) : (
+                        <X className="h-3 w-3 mr-1" />
+                      )}
+                      {result.platform.charAt(0).toUpperCase() +
+                        result.platform.slice(1)}
+                      {result.isLive && (
+                        <span className="ml-2 text-[#f70f62] font-bold">
+                          • LIVE
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -203,9 +286,14 @@ export default function FollowingPage() {
     "all",
   );
   const [liveOnly, setLiveOnly] = useState(false);
+  const [isAddChannelsOpen, setIsAddChannelsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<ChannelProps[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
 
   // Mock channel data
-  const channels: ChannelProps[] = [
+  const [channels, setChannels] = useState<ChannelProps[]>([
     {
       id: "1",
       name: "GamerPro99",
@@ -275,7 +363,132 @@ export default function FollowingPage() {
       isLive: true,
       viewers: 4532,
     },
-  ];
+  ]);
+
+  // Mock accounts from social platforms
+  const mockAccounts = {
+    twitch: [
+      {
+        id: "twitch-1",
+        name: "NinjaStreamer",
+        image:
+          "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=800&q=80",
+        platform: "twitch" as const,
+        isLive: true,
+        viewers: 45600,
+        isFollowed: false,
+      },
+      {
+        id: "twitch-2",
+        name: "ShroudGaming",
+        image:
+          "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80",
+        platform: "twitch" as const,
+        isLive: false,
+        isFollowed: false,
+      },
+      {
+        id: "twitch-3",
+        name: "PokimaneOfficial",
+        image:
+          "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+        platform: "twitch" as const,
+        isLive: true,
+        viewers: 23400,
+        isFollowed: false,
+      },
+      {
+        id: "twitch-4",
+        name: "TimTheTatman",
+        image:
+          "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80",
+        platform: "twitch" as const,
+        isLive: false,
+        isFollowed: false,
+      },
+    ],
+    x: [
+      {
+        id: "x-1",
+        name: "ElonMusk",
+        image:
+          "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
+        platform: "x" as const,
+        isLive: false,
+        isFollowed: false,
+      },
+      {
+        id: "x-2",
+        name: "MrBeast",
+        image:
+          "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80",
+        platform: "x" as const,
+        isLive: true,
+        viewers: 78900,
+        isFollowed: false,
+      },
+      {
+        id: "x-3",
+        name: "KSI",
+        image:
+          "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
+        platform: "x" as const,
+        isLive: false,
+        isFollowed: false,
+      },
+    ],
+  };
+
+  // Handle following/unfollowing channels
+  const toggleFollow = (account: ChannelProps) => {
+    // Check if the channel is already in the list
+    const existingIndex = channels.findIndex((ch) => ch.id === account.id);
+
+    if (existingIndex >= 0) {
+      // Remove from followed channels
+      setChannels((prev) => prev.filter((ch) => ch.id !== account.id));
+    } else {
+      // Add to followed channels
+      setChannels((prev) => [...prev, account]);
+    }
+  };
+
+  // Handle search functionality
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    // Combine all accounts for search
+    const allAccounts = [...mockAccounts.twitch, ...mockAccounts.x];
+
+    // Filter accounts based on search query
+    const results = allAccounts.filter((account) =>
+      account.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
+    setSearchResults(results);
+    setShowSearchResults(true);
+  }, [searchQuery]);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Filter channels based on selected filters
   const filteredChannels = channels.filter((channel) => {
@@ -294,12 +507,27 @@ export default function FollowingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-['Neue_Machina',_sans-serif]">
-      <Navbar />
+      <Navbar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchResults={searchResults}
+        setShowSearchResults={setShowSearchResults}
+        showSearchResults={showSearchResults}
+        searchResultsRef={searchResultsRef}
+      />
       <main className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-wanna-green uppercase">
-            Following
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-wanna-green uppercase">
+              Following
+            </h1>
+            <Button
+              onClick={() => setIsAddChannelsOpen(true)}
+              className="bg-[#f70f62] hover:bg-[#d00c52] text-white flex items-center gap-1 rounded-none"
+            >
+              <Plus className="h-4 w-4" /> ADD CHANNELS
+            </Button>
+          </div>
 
           <div className="flex items-center space-x-4">
             {/* Platform Filter Toggles */}
@@ -361,6 +589,170 @@ export default function FollowingPage() {
           </div>
         )}
       </main>
+
+      {/* Add Channels Modal */}
+      <Dialog open={isAddChannelsOpen} onOpenChange={setIsAddChannelsOpen}>
+        <DialogContent className="bg-[#1d1d1d] text-white border-gray-800 max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-wanna-green">
+              Add Channels
+            </DialogTitle>
+          </DialogHeader>
+
+          <Tabs defaultValue="twitch" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-800">
+              <TabsTrigger
+                value="twitch"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-purple-500"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2"
+                >
+                  <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                </svg>
+                Twitch
+              </TabsTrigger>
+              <TabsTrigger
+                value="x"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white"
+              >
+                <X className="mr-2 h-4 w-4" /> X
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="twitch" className="mt-4">
+              <div className="space-y-4">
+                {mockAccounts.twitch.map((account) => {
+                  const isFollowed = channels.some(
+                    (ch) => ch.id === account.id,
+                  );
+                  return (
+                    <div
+                      key={account.id}
+                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 mr-4 overflow-hidden">
+                          <img
+                            src={account.image}
+                            alt={account.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <div className="font-bold text-white">
+                            {account.name}
+                          </div>
+                          <div className="text-xs text-gray-400 flex items-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="text-purple-500 mr-1"
+                            >
+                              <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                            </svg>
+                            Twitch
+                            {account.isLive && (
+                              <span className="ml-2 text-[#f70f62] font-bold">
+                                • LIVE
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => toggleFollow(account)}
+                        variant={isFollowed ? "outline" : "default"}
+                        className={
+                          isFollowed
+                            ? "border-[#f70f62] text-[#f70f62] hover:bg-[#f70f62] hover:text-white rounded-none"
+                            : "bg-[#f70f62] hover:bg-[#d00c52] text-white rounded-none"
+                        }
+                      >
+                        <Heart
+                          className="h-4 w-4 mr-1"
+                          fill={isFollowed ? "#f70f62" : "none"}
+                        />
+                        {isFollowed ? "Following" : "Follow"}
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="x" className="mt-4">
+              <div className="space-y-4">
+                {mockAccounts.x.map((account) => {
+                  const isFollowed = channels.some(
+                    (ch) => ch.id === account.id,
+                  );
+                  return (
+                    <div
+                      key={account.id}
+                      className="flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 mr-4 overflow-hidden">
+                          <img
+                            src={account.image}
+                            alt={account.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <div className="font-bold text-white">
+                            {account.name}
+                          </div>
+                          <div className="text-xs text-gray-400 flex items-center">
+                            <X className="h-3 w-3 mr-1" />X
+                            {account.isLive && (
+                              <span className="ml-2 text-[#f70f62] font-bold">
+                                • LIVE
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => toggleFollow(account)}
+                        variant={isFollowed ? "outline" : "default"}
+                        className={
+                          isFollowed
+                            ? "border-[#f70f62] text-[#f70f62] hover:bg-[#f70f62] hover:text-white rounded-none"
+                            : "bg-[#f70f62] hover:bg-[#d00c52] text-white rounded-none"
+                        }
+                      >
+                        <Heart
+                          className="h-4 w-4 mr-1"
+                          fill={isFollowed ? "#f70f62" : "none"}
+                        />
+                        {isFollowed ? "Following" : "Follow"}
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
