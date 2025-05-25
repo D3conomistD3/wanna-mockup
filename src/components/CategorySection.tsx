@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Users } from "lucide-react";
+import { Users, X } from "lucide-react";
 
 interface StreamProps {
   id: string;
@@ -117,97 +117,80 @@ const CategorySection = ({
           </h2>
         </div>
 
-        <ScrollArea className="w-full">
-          <div className="flex space-x-4 pb-4">
-            {displayStreams.slice(0, 4).map((stream) => (
-              <div key={stream.id} className="min-w-[240px] max-w-[240px]">
-                <Card
-                  className={`overflow-hidden bg-gray-900 transition-all duration-200 group rounded-none border-0 border-none ${stream.platform === "twitch" ? "twitch-hover-shadow" : "x-hover-shadow"}`}
-                >
-                  <div className="relative">
-                    <img
-                      src={stream.thumbnail}
-                      alt={stream.title}
-                      className="w-full h-[135px] object-cover rounded-none"
-                    />
-                    {stream.isLive && (
-                      <Badge
-                        variant="destructive"
-                        className="absolute top-2 left-2 px-2 py-0.5 bg-[#f70f62] uppercase font-bold rounded-none"
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {displayStreams.slice(0, 4).map((stream) => (
+            <div key={stream.id}>
+              <Link
+                href={`/channel/${stream.id}`}
+                className={`block relative overflow-hidden group cursor-pointer transition-all duration-200 ${stream.platform === "twitch" ? "border-2 border-purple-500 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#9146FF]" : "border-2 border-white hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#FFFFFF]"}`}
+              >
+                {/* Background Image */}
+                <div className="relative w-full aspect-video">
+                  <img
+                    src={stream.thumbnail}
+                    alt={stream.title}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Platform Logo */}
+                  <div className="absolute top-2 right-2">
+                    {stream.platform === "twitch" ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-purple-500 bg-black/50 p-1"
                       >
-                        LIVE
-                      </Badge>
+                        <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                      </svg>
+                    ) : (
+                      <X className="text-white bg-black/50 p-1" size={24} />
                     )}
-                    {/* Platform logo */}
-                    {stream.platform && (
-                      <div className="absolute top-2 right-2 bg-black/70 p-1 rounded-sm">
-                        {stream.platform === "twitch" ? (
-                          <svg
-                            viewBox="0 0 24 24"
-                            width="16"
-                            height="16"
-                            fill="#9146FF"
-                          >
-                            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
-                          </svg>
-                        ) : stream.platform === "x" ? (
-                          <svg
-                            viewBox="0 0 24 24"
-                            width="16"
-                            height="16"
-                            fill="white"
-                          >
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                          </svg>
-                        ) : null}
-                      </div>
-                    )}
-                    <div className="absolute bottom-2 right-2 px-2 py-1 flex items-center gap-1 bg-black/70">
-                      <Users className="h-3 w-3 text-white/100" />
-                      <span className="text-xs font-bold text-white/100">
-                        {formatViewerCount(stream.viewerCount)}
-                      </span>
-                    </div>
                   </div>
-                  <CardContent className="p-3 bg-gray-900">
-                    <div className="flex items-start gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={stream.streamerAvatar}
-                          alt={stream.streamerName}
-                        />
-                        <AvatarFallback className="bg-gray-800 text-wanna-green">
-                          {stream.streamerName &&
-                          typeof stream.streamerName === "string" &&
-                          stream.streamerName.length > 0
-                            ? stream.streamerName.substring(0, 2)
-                            : "ST"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="overflow-hidden">
-                        <h3 className="text-sm font-bold text-white truncate group-hover:text-wanna-green transition-colors">
-                          {stream.title}
-                        </h3>
-                        <Link
-                          href={`/channel/${stream.id}`}
-                          className="text-xs text-wanna-green uppercase font-bold hover:underline"
-                        >
-                          {stream.streamerName}
-                        </Link>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+
+                  {/* Live Badge - Always show as requested */}
+                  <div className="absolute top-2 left-2 bg-[#f70f62] px-2 py-0.5 text-xs font-bold text-white">
+                    LIVE
+                  </div>
+
+                  {/* Viewer Count */}
+                  <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
+                    <Users className="h-3 w-3 text-wanna-green" />
+                    <span className="text-xs font-bold text-white">
+                      {formatViewerCount(stream.viewerCount)}
+                    </span>
+                  </div>
+
+                  {/* Channel Name Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                    <h3 className="text-white font-bold line-clamp-1">
+                      {stream.title}
+                    </h3>
+                    <Link
+                      href={`/channel/${stream.id}`}
+                      className="text-xs text-wanna-green uppercase font-bold hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {stream.streamerName}
+                    </Link>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
         <div className="mt-4 flex justify-center">
           <Button
             variant="ghost"
             className="text-wanna-green hover:text-white font-bold uppercase flex items-center gap-1 px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200"
           >
-            Show all &gt;
+            SHOW ALL &gt;
           </Button>
         </div>
       </div>

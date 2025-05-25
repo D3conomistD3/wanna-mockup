@@ -418,9 +418,13 @@ export default function FollowingPage() {
                           />
                         </div>
                         <div>
-                          <div className="font-bold text-white">
+                          <Link
+                            href={`/channel/${account.id}`}
+                            className="font-bold text-white hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {account.name}
-                          </div>
+                          </Link>
                           <div className="text-xs text-gray-400 flex items-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -491,9 +495,13 @@ export default function FollowingPage() {
                           />
                         </div>
                         <div>
-                          <div className="font-bold text-white">
+                          <Link
+                            href={`/channel/${account.id}`}
+                            className="font-bold text-white hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {account.name}
-                          </div>
+                          </Link>
                           <div className="text-xs text-gray-400 flex items-center">
                             <X className="h-3 w-3 mr-1" />X
                             {account.isLive && (

@@ -142,8 +142,8 @@ const InteractiveElements = ({
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {predictions.map((prediction) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {predictions.slice(0, 3).map((prediction) => (
             <PredictionCard key={prediction.id} prediction={prediction} />
           ))}
         </div>
@@ -175,7 +175,8 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
       <CardHeader className="pb-2 bg-[#3d3d3d]">
         <div className="flex justify-between items-start">
           <div className="flex items-center">
-            <Badge className="mr-2 bg-[#F70F62] text-white font-bold px-2 py-0 text-xs rounded-none">
+            <Badge className="mr-2 bg-[#F70F62] text-white font-bold px-2 py-0 text-xs rounded-none flex items-center gap-1">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               LIVE
             </Badge>
           </div>
@@ -224,7 +225,7 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
           size="sm"
           className="text-xs bg-wanna-green text-white font-bold hover:bg-wanna-pink hover:text-white transition-colors bg-[#F70F62] rounded-none"
         >
-          Place Prediction
+          PLACE PREDICTION
         </Button>
       </CardFooter>
     </Card>

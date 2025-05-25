@@ -625,11 +625,6 @@ export default function HomePage() {
         {/* Featured Content Section */}
         <section className="mb-10">
           <FeaturedContent streams={featuredStreams} />
-          <div className="flex justify-center mt-4">
-            <button className="text-wanna-green hover:text-white font-bold uppercase px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200">
-              Show more &gt;
-            </button>
-          </div>
         </section>
 
         {/* Live Predictions Section */}
@@ -638,7 +633,7 @@ export default function HomePage() {
           <div className="flex justify-center mt-4">
             <Link href="/predictions">
               <button className="hover:text-purple-400 font-medium text-white">
-                Show all &gt;
+                SHOW ALL &gt;
               </button>
             </Link>
           </div>
@@ -743,7 +738,7 @@ export default function HomePage() {
           </div>
           <div className="flex justify-center mt-4">
             <button className="hover:bg-[#f70f62] font-bold px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 bg-transparent text-white">
-              Show all &gt;
+              SHOW ALL &gt;
             </button>
           </div>
         </section>

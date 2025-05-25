@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
@@ -67,29 +67,29 @@ const FeaturedContent = ({
   return (
     <div className="w-full bg-background py-6 bg-transparent">
       <div className="container mx-auto px-4">
-        <div className="relative h-[400px] overflow-hidden" ref={carouselRef}>
-          {/* Left Stream */}
+        <div className="relative h-[500px] overflow-hidden" ref={carouselRef}>
+          {/* Left Stream - Vertically centered */}
           <div
-            className="absolute transition-all duration-500 w-[30%] top-[50px] left-[5%] z-10 opacity-70 transform scale-90"
+            className="absolute transition-all duration-500 w-[30%] top-1/2 -translate-y-1/2 left-[5%] z-10 opacity-70 transform scale-90"
             onClick={prevSlide}
           >
             <StreamCard stream={streams[leftIndex]} position="left" />
           </div>
 
-          {/* Center Stream (Featured) */}
-          <div className="absolute transition-all duration-500 w-[40%] top-0 left-[30%] z-20 transform scale-100">
+          {/* Center Stream (Featured) - Vertically centered */}
+          <div className="absolute transition-all duration-500 w-[40%] top-1/2 -translate-y-1/2 left-[30%] z-20 transform scale-100">
             <StreamCard stream={streams[centerIndex]} position="center" />
           </div>
 
-          {/* Right Stream */}
+          {/* Right Stream - Vertically centered */}
           <div
-            className="absolute transition-all duration-500 w-[30%] top-[50px] right-[5%] z-10 opacity-70 transform scale-90"
+            className="absolute transition-all duration-500 w-[30%] top-1/2 -translate-y-1/2 right-[5%] z-10 opacity-70 transform scale-90"
             onClick={nextSlide}
           >
             <StreamCard stream={streams[rightIndex]} position="right" />
           </div>
 
-          {/* Navigation Controls */}
+          {/* Navigation Controls - Centered vertically */}
           <button
             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 p-2 z-30 hover:bg-black/80"
             onClick={prevSlide}
@@ -103,11 +103,6 @@ const FeaturedContent = ({
             <ChevronRight className="text-white" />
           </button>
         </div>
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <></>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -120,61 +115,75 @@ const StreamCard = ({
   stream: StreamProps;
   position?: "left" | "center" | "right";
 }) => {
+  // Determine height based on position
+  const imageHeight = position === "center" ? "h-80" : "h-60";
+
   return (
-    <Card
-      className={`overflow-hidden bg-gray-900 transition-all duration-200 group rounded-none border-0 border-none ${stream.platform === "twitch" ? "twitch-hover-shadow" : "x-hover-shadow"} cursor-pointer`}
+    <div
+      className={`relative overflow-hidden group cursor-pointer transition-all duration-200 ${stream.platform === "twitch" ? "border-2 border-purple-500 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#9146FF]" : "border-2 border-white hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#FFFFFF]"}`}
     >
-      <div className="relative">
+      {/* Background Image */}
+      <div className={`relative w-full ${imageHeight}`}>
         <img
           src={stream.thumbnail}
           alt={stream.title}
-          className="w-full h-40 object-cover rounded-none"
+          className="w-full h-full object-cover"
         />
-        {stream.isLive && (
-          <Badge
-            variant="destructive"
-            className="absolute top-2 left-2 px-2 py-0.5 bg-wanna-pink uppercase font-bold rounded-none"
-          >
-            LIVE
-          </Badge>
-        )}
+
+        {/* Platform Logo */}
+        <div className="absolute top-2 right-2">
+          {stream.platform === "twitch" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-purple-500 bg-black/50 p-1"
+            >
+              <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+            </svg>
+          ) : (
+            <X className="text-white bg-black/50 p-1" size={24} />
+          )}
+        </div>
+
+        {/* Live Badge - Always show as requested */}
+        <div className="absolute top-2 left-2 bg-[#f70f62] px-2 py-0.5 text-xs font-bold text-white">
+          LIVE
+        </div>
+
+        {/* Viewer Count */}
         <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
           <Users className="h-3 w-3 text-wanna-green" />
-          <span className="text-xs font-bold">
+          <span className="text-xs font-bold text-white">
             {stream.viewers && typeof stream.viewers === "number"
               ? stream.viewers.toLocaleString()
               : "0"}
           </span>
         </div>
-      </div>
-      <CardContent className="p-4 bg-gray-900">
-        <div className="flex items-start gap-3 mb-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage
-              src={stream.streamer.avatar}
-              alt={stream.streamer.name}
-            />
-            <AvatarFallback className="bg-gray-800 text-wanna-green">
-              {stream.streamer.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <Link
-              href={`/channel/${stream.id}`}
-              className="text-sm font-bold text-white hover:underline"
-            >
-              {stream.streamer.name}
-            </Link>
-            <p className="text-xs text-wanna-green uppercase">
-              {stream.category}
-            </p>
-          </div>
+
+        {/* Channel Name Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+          <Link
+            href={`/channel/${stream.id}`}
+            className="text-white font-bold hover:underline"
+          >
+            {stream.streamer.name}
+          </Link>
+          <p className="text-xs text-wanna-green uppercase">
+            {stream.category}
+          </p>
+          <h3 className="text-white font-bold line-clamp-2 group-hover:text-wanna-green transition-colors mt-1">
+            {stream.title}
+          </h3>
         </div>
-        <h3 className="font-bold line-clamp-2 text-white group-hover:text-wanna-green transition-colors">
-          {stream.title}
-        </h3>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
@@ -192,6 +201,7 @@ const defaultStreams: StreamProps[] = [
     viewers: 15420,
     category: "Gaming",
     isLive: true,
+    platform: "twitch",
   },
   {
     id: "2",
