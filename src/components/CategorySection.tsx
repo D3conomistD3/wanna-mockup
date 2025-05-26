@@ -122,15 +122,13 @@ const CategorySection = ({
             <div key={stream.id}>
               <Link
                 href={`/channel/${stream.id}`}
-                className={`block relative overflow-hidden group cursor-pointer transition-all duration-200 ${stream.platform === "twitch" ? "border-2 border-purple-500 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#9146FF]" : "border-2 border-white hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#FFFFFF]"}`}
-              >
+                className={`block relative overflow-hidden group cursor-pointer transition-all duration-200 ${stream.platform === "twitch" ? "border-2 border-purple-500 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#9146FF]" : "border-2 border-white hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#FFFFFF]"}`}>
                 {/* Background Image */}
                 <div className="relative w-full aspect-video">
                   <img
                     src={stream.thumbnail}
                     alt={stream.title}
-                    className="w-full h-full object-cover"
-                  />
+                    className="w-full h-full object-cover" />
 
                   {/* Platform Logo */}
                   <div className="absolute top-2 right-2">
@@ -145,8 +143,7 @@ const CategorySection = ({
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="text-purple-500 bg-black/50 p-1"
-                      >
+                        className="text-purple-500 bg-black/50 p-1">
                         <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
                       </svg>
                     ) : (
@@ -155,12 +152,25 @@ const CategorySection = ({
                   </div>
 
                   {/* Live Badge - Always show as requested */}
-                  <div className="absolute top-2 left-2 bg-[#f70f62] px-2 py-0.5 text-xs font-bold text-white">
+                  <div
+                    className="absolute top-2 left-2 bg-[#f70f62] px-2 py-0.5 text-xs font-bold text-white">
                     LIVE
                   </div>
 
+                  {/* Prediction Icon - Show on some streams */}
+                  {stream.id === "1" ||
+                  stream.id === "3" ||
+                  parseInt(stream.id) % 3 === 0 ? (
+                    <div
+                      className="absolute top-2 left-16 bg-[#00ff85] px-2 py-0.5 text-xs font-bold text-black flex items-center gap-1">
+                      <div className="w-2 h-2 bg-black rounded-full"></div>
+                      PREDICTION
+                    </div>
+                  ) : null}
+
                   {/* Viewer Count */}
-                  <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
+                  <div
+                    className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
                     <Users className="h-3 w-3 text-wanna-green" />
                     <span className="text-xs font-bold text-white">
                       {formatViewerCount(stream.viewerCount)}
@@ -168,15 +178,15 @@ const CategorySection = ({
                   </div>
 
                   {/* Channel Name Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
+                  <div
+                    className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
                     <h3 className="text-white font-bold line-clamp-1">
                       {stream.title}
                     </h3>
                     <Link
                       href={`/channel/${stream.id}`}
                       className="text-xs text-wanna-green uppercase font-bold hover:underline"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       {stream.streamerName}
                     </Link>
                   </div>
@@ -188,10 +198,7 @@ const CategorySection = ({
         <div className="mt-4 flex justify-center">
           <Button
             variant="ghost"
-            className="text-wanna-green hover:text-white font-bold uppercase flex items-center gap-1 px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200"
-          >
-            SHOW ALL &gt;
-          </Button>
+            className="text-wanna-green hover:text-white font-bold uppercase flex items-center gap-1 px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200">SHOW MORE ></Button>
         </div>
       </div>
     </div>

@@ -280,6 +280,127 @@ const Navbar = () => {
   );
 };
 
+// Prediction Card Component for the predictions page
+const PredictionCard = ({ prediction }) => {
+  // Generate a random thumbnail for the background
+  const backgroundImage = prediction.channelAvatar
+    ? prediction.channelAvatar.includes("GamingPro")
+      ? "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80"
+      : prediction.channelAvatar.includes("Crypto")
+        ? "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80"
+        : prediction.channelAvatar.includes("Music")
+          ? "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80"
+          : prediction.channelAvatar.includes("Rage")
+            ? "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80"
+            : prediction.channelAvatar.includes("Competitive")
+              ? "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80"
+              : "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80"
+    : "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80";
+
+  return (
+    <Card className="overflow-hidden bg-[#3d3d3d] transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group border-0 border-none rounded-none relative">
+      {/* Blurred background image */}
+      <div
+        className="absolute inset-0 z-0 opacity-40"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(8px)",
+        }}
+      />
+      <div className="absolute inset-0 z-0 bg-black bg-opacity-50"></div>
+      <CardHeader className="pb-2 relative z-10">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center">
+            <Badge className="mr-2 bg-[#F70F62] text-white font-bold px-2 py-0 text-xs rounded-none flex items-center gap-1">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              LIVE
+            </Badge>
+            <Avatar className="h-6 w-6 mr-2">
+              <AvatarImage
+                src={prediction.channelAvatar}
+                alt={prediction.channel}
+              />
+            </Avatar>
+            <Link
+              href={`/channel/${prediction.id}`}
+              className="text-sm font-bold text-white hover:underline"
+            >
+              {prediction.channel}
+            </Link>
+          </div>
+          <div className="text-[#F70F62] font-bold text-xs flex items-center">
+            <Clock className="mr-1 h-3 w-3 text-[#00ff85]" />{" "}
+            {prediction.timeRemaining}
+          </div>
+        </div>
+        <CardTitle className="text-lg mt-2 text-white group-hover:text-wanna-green transition-colors">
+          {prediction.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="relative z-10">
+        <div className="space-y-2">
+          {prediction.options.map((option, index) => (
+            <div
+              key={index}
+              className={`flex justify-between items-center p-2 bg-gray-800 hover:bg-gray-700 transition-colors ${option.name === "Yes" ? "border-[#00ff85]" : "border-[#f70f62]"} border-2 rounded-none`}
+            >
+              <span className="text-white font-bold">{option.name}</span>
+              <Badge
+                variant="secondary"
+                className="bg-black text-wanna-pink font-bold rounded-none"
+              >
+                {option.odds}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between pt-2 border-t border-gray-800 relative z-10">
+        <div className="flex items-center text-xs text-gray-400">
+          <Users className="h-3 w-3 mr-1" />
+          {prediction.participants.toLocaleString()} participating
+        </div>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            className="text-xs bg-[#00ff85] text-black font-bold hover:bg-[#00cc6a] hover:text-white transition-colors rounded-none flex items-center gap-1"
+          >
+            {prediction.channelAvatar.includes("GamingPro") ||
+            prediction.channelAvatar.includes("Competitive") ||
+            prediction.channelAvatar.includes("Adventure") ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-black"
+              >
+                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+              </svg>
+            ) : (
+              <X className="h-3 w-3 text-black" />
+            )}
+            WATCH STREAM
+          </Button>
+          <Button
+            size="sm"
+            className="text-xs bg-wanna-green text-white font-bold hover:bg-wanna-pink hover:text-white transition-colors bg-[#F70F62] rounded-none"
+          >
+            Place Prediction
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const PredictionsPage = () => {
   const [sortOption, setSortOption] = useState("24hr Volume");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -434,83 +555,57 @@ const PredictionsPage = () => {
           </div>
         </div>
 
-        {/* Prediction Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {predictionCards.map((prediction) => (
-            <Card
-              key={prediction.id}
-              className="overflow-hidden bg-[#3d3d3d] transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group border-0 border-none rounded-none"
-            >
-              <CardHeader className="pb-2 bg-[#3d3d3d]">
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center">
-                    <Badge className="mr-2 bg-[#F70F62] text-white font-bold px-2 py-0 text-xs rounded-none">
-                      LIVE
-                    </Badge>
-                    <Avatar className="h-6 w-6 mr-2">
-                      <AvatarImage
-                        src={prediction.channelAvatar}
-                        alt={prediction.channel}
+        {/* Prediction Cards by Category */}
+        {selectedCategory === "All" ? (
+          // Show predictions grouped by category
+          categories
+            .filter((cat) => cat !== "All")
+            .map((category) => (
+              <div key={category} className="mb-10">
+                <h2 className="text-2xl font-bold mb-4 text-wanna-green uppercase">
+                  {category}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                  {predictionCards
+                    .filter(
+                      (_, index) =>
+                        index % categories.length ===
+                        categories.indexOf(category) % categories.length,
+                    )
+                    .slice(0, 3)
+                    .map((prediction) => (
+                      <PredictionCard
+                        key={prediction.id}
+                        prediction={prediction}
                       />
-                    </Avatar>
-                    <Link
-                      href={`/channel/${prediction.id}`}
-                      className="text-sm font-bold text-white hover:underline"
-                    >
-                      {prediction.channel}
-                    </Link>
-                  </div>
-                  <div className="text-[#F70F62] font-bold text-xs flex items-center">
-                    <Clock className="mr-1 h-3 w-3 text-[#00ff85]" />{" "}
-                    {prediction.timeRemaining}
-                  </div>
+                    ))}
                 </div>
-                <CardTitle className="text-lg mt-2 text-white group-hover:text-wanna-green transition-colors">
-                  {prediction.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="bg-[#3d3d3d]">
-                <div className="space-y-2">
-                  {prediction.options.map((option, index) => (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center p-2 bg-gray-800 hover:bg-gray-700 transition-colors ${option.name === "Yes" ? "border-[#00ff85]" : "border-[#f70f62]"} border-2 rounded-none`}
-                    >
-                      <span className="text-white font-bold">
-                        {option.name}
-                      </span>
-                      <Badge
-                        variant="secondary"
-                        className="bg-black text-wanna-pink font-bold rounded-none"
-                      >
-                        {option.odds}
-                      </Badge>
-                    </div>
-                  ))}
+                <div className="flex justify-center mb-8">
+                  <Button className="text-wanna-green hover:text-[#f70f62] font-bold uppercase px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 bg-transparent rounded-none">
+                    SHOW MORE &gt;
+                  </Button>
                 </div>
-              </CardContent>
-              <CardFooter className="flex justify-between pt-2 border-t border-gray-800 bg-[#3d3d3d]">
-                <div className="flex items-center text-xs text-gray-400">
-                  <Users className="h-3 w-3 mr-1" />
-                  {prediction.participants.toLocaleString()} participating
-                </div>
-                <Button
-                  size="sm"
-                  className="text-xs bg-wanna-green text-white font-bold hover:bg-wanna-pink hover:text-white transition-colors bg-[#F70F62] rounded-none"
-                >
-                  Place Prediction
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+              </div>
+            ))
+        ) : (
+          // Show filtered predictions for selected category
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {predictionCards
+              .filter(
+                (_, index) =>
+                  index % categories.length ===
+                  categories.indexOf(selectedCategory) % categories.length,
+              )
+              .map((prediction) => (
+                <PredictionCard key={prediction.id} prediction={prediction} />
+              ))}
+          </div>
+        )}
 
-        {/* Show More Button */}
-        <div className="flex justify-center mt-8">
-          <Button className="text-wanna-green hover:text-[#f70f62] font-bold uppercase px-6 py-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#F70F62] transition-all duration-200 bg-transparent rounded-none">
-            Show more &gt;
-          </Button>
-        </div>
+        {/* Show More Button - only show for filtered view */}
+        {selectedCategory !== "All" && (
+          <div className="flex justify-center mt-8"></div>
+        )}
       </main>
     </div>
   );

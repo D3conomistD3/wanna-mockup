@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, MoreVertical, User, X, Users, Plus } from "lucide-react";
+import {
+  Search,
+  MoreVertical,
+  User,
+  X,
+  Users,
+  Plus,
+  TrendingUp,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -307,6 +315,13 @@ const ChannelCard = ({ channel }: { channel: ChannelProps }) => {
         {channel.isLive && (
           <div className="absolute top-2 left-2 bg-[#f70f62] px-2 py-0.5 text-xs font-bold text-white">
             LIVE
+          </div>
+        )}
+
+        {/* Prediction Icon - only show on some live channels */}
+        {channel.isLive && channel.id % 3 === 0 && (
+          <div className="absolute top-2 left-16 bg-[#00ff85] px-2 py-0.5 text-xs font-bold text-black flex items-center gap-1">
+            <TrendingUp className="h-3 w-3" /> PREDICTION
           </div>
         )}
 

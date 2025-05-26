@@ -100,10 +100,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
           {/* Logo */}
           <div className="h-8">
-            <Link
-              href="/"
-              className="text-xl font-bold text-white hover:text-wanna-pink"
-            >
+            <Link href="/" className="text-xl font-bold text-white hover:text-wanna-pink">
               WANNA ?
             </Link>
           </div>
@@ -148,7 +145,8 @@ const Navbar = () => {
 
         {/* Search Field with Icon */}
         <div className="flex-1 max-w-md mx-4 relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div
+            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="h-4 w-4 text-gray-400" />
           </div>
           <input
@@ -159,37 +157,33 @@ const Navbar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() =>
               searchQuery.trim() !== "" && setShowSearchResults(true)
-            }
-          />
+            } />
 
           {/* Search Results Dropdown */}
           {showSearchResults && searchResults.length > 0 && (
             <div
               ref={searchResultsRef}
-              className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-700 shadow-lg max-h-96 overflow-y-auto"
-            >
+              className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-700 shadow-lg max-h-96 overflow-y-auto">
               {searchResults.map((result) => (
                 <Link
                   key={result.id}
                   href={`/channel/${result.id}`}
                   className="flex items-center p-3 hover:bg-gray-700 border-b border-gray-700 last:border-b-0"
-                  onClick={() => setShowSearchResults(false)}
-                >
+                  onClick={() => setShowSearchResults(false)}>
                   <div className="w-10 h-10 mr-3 overflow-hidden">
                     <img
                       src={result.image}
                       alt={result.name}
-                      className="w-full h-full object-cover"
-                    />
+                      className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white truncate group-hover:text-wanna-green transition-colors">
+                    <h3
+                      className="text-sm font-bold text-white truncate group-hover:text-wanna-green transition-colors">
                       {result.name}
                     </h3>
                     <Link
                       href={`/channel/${result.id}`}
-                      className="text-xs text-wanna-green uppercase font-bold hover:underline"
-                    >
+                      className="text-xs text-wanna-green uppercase font-bold hover:underline">
                       {result.name}
                     </Link>
                     <div className="text-xs text-gray-400 flex items-center">
@@ -204,8 +198,7 @@ const Navbar = () => {
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className="text-purple-500 mr-1"
-                        >
+                          className="text-purple-500 mr-1">
                           <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
                         </svg>
                       ) : (
@@ -238,7 +231,8 @@ const Navbar = () => {
           {/* Profile Icon with Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-none bg-gray-700 flex items-center justify-center hover:bg-gray-600">
+              <button
+                className="w-8 h-8 rounded-none bg-gray-700 flex items-center justify-center hover:bg-gray-600">
                 <User size={16} fill="none" />
               </button>
             </DropdownMenuTrigger>
@@ -619,7 +613,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-['Neue_Machina',_sans-serif]">
+    <div
+      className="min-h-screen bg-black text-white font-['Neue_Machina',_sans-serif]">
       <Navbar />
       <main className="container mx-auto px-4 py-6 max-w-7xl">
         {/* Featured Content Section */}
@@ -632,9 +627,7 @@ export default function HomePage() {
           <InteractiveElements predictions={interactiveElements.predictions} />
           <div className="flex justify-center mt-4">
             <Link href="/predictions">
-              <button className="hover:text-purple-400 font-medium text-white">
-                SHOW ALL &gt;
-              </button>
+              <button className="hover:text-purple-400 font-medium text-white">SHOW MORE ></button>
             </Link>
           </div>
         </section>
@@ -645,7 +638,8 @@ export default function HomePage() {
             Categories
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
+            <div
+              className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -657,8 +651,7 @@ export default function HomePage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-white"
-                >
+                  className="text-white">
                   <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                   <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                   <path d="M4 22h16"></path>
@@ -669,7 +662,8 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Gaming</span>
             </div>
-            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
+            <div
+              className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -681,8 +675,7 @@ export default function HomePage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-white"
-                >
+                  className="text-white">
                   <circle cx="12" cy="12" r="10"></circle>
                   <circle cx="12" cy="12" r="4"></circle>
                   <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
@@ -694,7 +687,8 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Sports</span>
             </div>
-            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
+            <div
+              className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -706,8 +700,7 @@ export default function HomePage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-white"
-                >
+                  className="text-white">
                   <path d="M9 18V5l12-2v13"></path>
                   <circle cx="6" cy="18" r="3"></circle>
                   <circle cx="18" cy="16" r="3"></circle>
@@ -715,7 +708,8 @@ export default function HomePage() {
               </div>
               <span className="text-white font-medium">Music</span>
             </div>
-            <div className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
+            <div
+              className="p-4 flex items-center space-x-3 hover:bg-[#f70f62] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 cursor-pointer border-0 border-none bg-[#f70f62]">
               <div className="bg-[#F70F62] p-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -727,20 +721,16 @@ export default function HomePage() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-white"
-                >
-                  <path d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2Z"></path>
+                  className="text-white">
+                  <path
+                    d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V7h-5a8 8 0 0 0-5 2 8 8 0 0 0-5-2H2Z"></path>
                   <path d="M6 11c1.5 0 3 .5 3 2-2 0-3 0-3-2Z"></path>
                 </svg>
               </div>
               <span className="text-white font-medium">IRL</span>
             </div>
           </div>
-          <div className="flex justify-center mt-4">
-            <button className="hover:bg-[#f70f62] font-bold px-4 py-2 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[2px_2px_0px_0px_#00ff85] transition-all duration-200 bg-transparent text-white">
-              SHOW ALL &gt;
-            </button>
-          </div>
+          <div className="flex justify-center mt-4"></div>
         </section>
 
         {/* Category Sections */}
@@ -763,8 +753,7 @@ export default function HomePage() {
                     : "https://api.dicebear.com/7.x/avataaars/svg?seed=default"),
                 isLive: stream.isLive !== undefined ? stream.isLive : true,
                 platform: stream.platform || "twitch",
-              }))}
-            />
+              }))} />
           </section>
         ))}
       </main>

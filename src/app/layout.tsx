@@ -21,10 +21,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <Script src="https://api.tempolabs.ai/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js" />
-      <body className="font-['Neue_Machina',_sans-serif]">
+      <body>
         {children}
         <TempoInit />
+        <Script src="https://api.tempolabs.ai/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js" />
       </body>
     </html>
   );

@@ -157,13 +157,21 @@ const StreamCard = ({
           LIVE
         </div>
 
+        {/* Prediction Icon - Show on some streams */}
+        {position === "left" || position === "center" ? (
+          <div className="absolute top-2 left-16 bg-[#00ff85] px-2 py-0.5 text-xs font-bold text-black flex items-center gap-1">
+            <div className="w-2 h-2 bg-black rounded-full"></div>
+            PREDICTION
+          </div>
+        ) : null}
+
         {/* Viewer Count */}
         <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 flex items-center gap-1">
-          <Users className="h-3 w-3 text-wanna-green" />
           <span className="text-xs font-bold text-white">
             {stream.viewers && typeof stream.viewers === "number"
               ? stream.viewers.toLocaleString()
-              : "0"}
+              : "0"}{" "}
+            viewers
           </span>
         </div>
 

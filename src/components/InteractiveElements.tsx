@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Users, ChevronRight } from "lucide-react";
+import { Clock, Users, ChevronRight, X } from "lucide-react";
+import Link from "next/link";
 
 interface PredictionProps {
   id: string;
@@ -156,6 +157,21 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
   const initialSeconds = parseTimeToSeconds(prediction.timeRemaining);
   const [timeInSeconds, setTimeInSeconds] = useState<number>(initialSeconds);
 
+  // Generate a random thumbnail for the background
+  const backgroundImage = prediction.channelAvatar
+    ? prediction.channelAvatar.includes("GamingPro")
+      ? "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80"
+      : prediction.channelAvatar.includes("AdventureQuest")
+        ? "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80"
+        : prediction.channelAvatar.includes("MusicMaster")
+          ? "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80"
+          : prediction.channelAvatar.includes("RageGaming")
+            ? "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80"
+            : prediction.channelAvatar.includes("CompetitiveGaming")
+              ? "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80"
+              : "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80"
+    : "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80";
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeInSeconds((prevTime) => {
@@ -171,25 +187,39 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
   }, [initialSeconds]);
 
   return (
-    <Card className="overflow-hidden bg-[#3d3d3d] transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group border-0 border-none rounded-none">
-      <CardHeader className="pb-2 bg-[#3d3d3d]">
+    <Card className="overflow-hidden transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_#F70F62] group border-0 border-none rounded-none relative">
+      {/* Blurred background image */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(8px)",
+        }}
+      />
+      <div className="absolute inset-0 z-0 bg-black bg-opacity-50"></div>
+      <CardHeader className="pb-2 relative z-10">
         <div className="flex justify-between items-start">
           <div className="flex items-center">
             <Badge className="mr-2 bg-[#F70F62] text-white font-bold px-2 py-0 text-xs rounded-none flex items-center gap-1">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               LIVE
             </Badge>
-          </div>
-          <div className="flex items-center">
-            <Avatar className="h-6 w-6 mr-2">
-              <AvatarImage
-                src={prediction.channelAvatar}
-                alt={prediction.channel}
-              />
-            </Avatar>
-            <span className="text-sm font-bold text-white">
-              {prediction.channel}
-            </span>
+            <Link
+              href={`/channel/${prediction.id}`}
+              className="flex items-center"
+            >
+              <Avatar className="h-6 w-6 mr-2">
+                <AvatarImage
+                  src={prediction.channelAvatar}
+                  alt={prediction.channel}
+                />
+              </Avatar>
+              <span className="text-sm font-bold text-white hover:underline">
+                {prediction.channel}
+              </span>
+            </Link>
           </div>
           <div className="text-[#F70F62] font-bold text-xs flex items-center">
             <Clock className="mr-1 h-3 w-3 text-[#00ff85]" />{" "}
@@ -200,7 +230,7 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
           {prediction.title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="bg-[#3d3d3d]">
+      <CardContent className="relative z-10">
         <div className="space-y-2">
           {prediction.options.map((option, index) => (
             <div
@@ -216,17 +246,55 @@ const PredictionCard = ({ prediction }: { prediction: PredictionProps }) => {
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between pt-2 border-t border-gray-800 bg-[#3d3d3d]">
+      <CardFooter className="flex justify-between pt-2 border-t border-gray-800 relative z-10">
         <div className="flex items-center text-xs text-gray-400">
           <Users className="h-3 w-3 mr-1" />
           {prediction.participants.toLocaleString()} participants
         </div>
-        <Button
-          size="sm"
-          className="text-xs bg-wanna-green text-white font-bold hover:bg-wanna-pink hover:text-white transition-colors bg-[#F70F62] rounded-none"
-        >
-          PLACE PREDICTION
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            className="text-xs bg-[#00ff85] text-black font-bold hover:bg-[#00cc6a] hover:text-white transition-colors rounded-none flex items-center gap-1"
+          >
+            {prediction.channelAvatar &&
+              (prediction.channelAvatar.includes("GamingPro") ||
+              prediction.channelAvatar.includes("CompetitiveGaming") ||
+              prediction.channelAvatar.includes("AdventureQuest") ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-black"
+                >
+                  <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-black"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              ))}
+            WATCH STREAM
+          </Button>
+          <Button
+            size="sm"
+            className="text-xs bg-wanna-green text-white font-bold hover:bg-wanna-pink hover:text-white transition-colors bg-[#F70F62] rounded-none"
+          >
+            PLACE PREDICTION
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
